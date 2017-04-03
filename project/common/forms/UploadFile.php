@@ -43,7 +43,7 @@ class UploadFile extends Model
     public function filePath(){
         $dir = $this->globalPath.DIRECTORY_SEPARATOR.Yii::$app->user->id.DIRECTORY_SEPARATOR;
         if(!is_dir(Yii::getAlias('@uploads').DIRECTORY_SEPARATOR.$dir)){
-          mkdir($dir, 0777, true);
+          mkdir(Yii::getAlias('@uploads').DIRECTORY_SEPARATOR.$dir, 0777, true);
         }
         return $dir;
     }
