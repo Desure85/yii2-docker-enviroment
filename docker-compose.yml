@@ -1,0 +1,29 @@
+nginx:
+  image: nginx
+  links:
+    - php
+  volumes:
+    - ./project:/www
+    - ./docker/nginx/conf.d:/etc/nginx/conf.d
+  ports:
+    - 80:80
+    - 443:443
+
+php:
+  build: docker/php/build
+  links:
+      - mysql
+  volumes:
+    - ./project:/www
+    - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+  working_dir: /www/
+
+mysql:
+  volumes:
+    - ./db:/var/lib/mysql
+  image: mysql:5.6
+  environment:
+    MYSQL_ROOT_PASSWORD: 12345
+    MYSQL_DATABASE: test
+  ports:
+    - 3306:3306
