@@ -9,6 +9,6 @@ Yii 2 Docker Test Enviroment(with Kafka env)
 6. Wait until the composer finishes
 7. Run php yii migrate/up
 8. Run php yii migrate --migrationPath=@yii/rbac/migrations
-8. Run php yii rbac/init
+9. Run php yii rbac/init
 
 The application is available at 127.0.0.1:80
