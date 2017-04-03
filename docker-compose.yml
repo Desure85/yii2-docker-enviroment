@@ -12,7 +12,7 @@ nginx:
 php:
   build: docker/php/build
   links:
-      - mysql
+    - mysql
   volumes:
     - ./project:/www
     - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
