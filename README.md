@@ -1,4 +1,4 @@
-Yii 2 Docker Test Enviroment(with Kafka env)
+Yii 2 Docker Test Enviroment(with php_rdkafka)
 ===============================
 
 1. Clone/Upload
