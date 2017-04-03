@@ -2,7 +2,7 @@ Yii 2 Docker Test Enviroment(with Kafka env)
 ===============================
 
 1. Clone/Upload
-2. Run #compose-up -d and wait until the deploy is complete
+2. Run #docker-compose up -d and wait until the deploy is complete
 3. Enter in php container #docker exec -it [container-name] bash
 4. Run in container php composer.phar update
 5. Wait for the token to be entered and enter it
