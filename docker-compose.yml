@@ -3,18 +3,19 @@ nginx:
   links:
     - php
   volumes:
-    - ./project:/www
-    - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    - ./project:/www  #папка с проектом
+    - ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
+    - ./docker/nginx/conf.d:/etc/nginx/conf.d-basic # - basic
   ports:
     - 80:80
     - 443:443
-
 php:
   build: docker/php/build
   links:
     - mysql
   volumes:
     - ./project:/www
+    - ./projectnew:/www2
     - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
   working_dir: /www/
 
@@ -25,5 +26,6 @@ mysql:
   environment:
     MYSQL_ROOT_PASSWORD: 12345
     MYSQL_DATABASE: test
+  command: mysqld --sql_mode=""
   ports:
     - 3306:3306
