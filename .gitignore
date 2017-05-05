@@ -1,12 +1,17 @@
 # Created by .ignore support plugin (hsz.mobi)
 *
 !.gitignore
-!docker-compose.yml
-!README.md
-!/docker/
-!/docker/nginx/
-!/docker/php/
 !/db/
-!/docker/nginx/conf.d-basic/
-
-!/project/
+!/docker/
+!README.md
+!docker-compose.yml
+!/docker/nginx/
+!/docker/nginx/conf.d/
+!/docker/nginx/conf.d/advanced.conf
+!/docker/nginx/conf.dbasic/
+!/docker/nginx/conf.dbasic/basic.conf
+!/docker/php/
+!/docker/php/build/
+!/docker/php/php-fpm.conf
+!/project/dir_to_project
+!/project
