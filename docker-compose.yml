@@ -5,7 +5,7 @@ nginx:
   volumes:
     - ./project:/www  #папка с проектом
     - ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
-    - ./docker/nginx/conf.d:/etc/nginx/conf.d-basic # - basic
+    #- ./docker/nginx/conf.d:/etc/nginx/conf.d-basic # - basic
   ports:
     - 80:80
     - 443:443
