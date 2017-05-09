@@ -16,3 +16,5 @@
 !/project/dir_to_project
 !/project
 !/docker/php/build/Dockerfile
+!/docker/php/ini/zcustom.ini
+!/docker/php/ini/

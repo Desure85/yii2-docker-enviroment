@@ -3,20 +3,21 @@ nginx:
   links:
     - php
   volumes:
-    - ./project:/www  #папка с проектом
+    - ./main:/www  #папка с проектом
     - ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
     #- ./docker/nginx/conf.d:/etc/nginx/conf.d-basic # - basic
   ports:
     - 80:80
+    - 8080:8080
     - 443:443
 php:
   build: docker/php/build
   links:
     - mysql
   volumes:
-    - ./project:/www
-    - ./projectnew:/www2
+    - ./main:/www    #папка с проектом
     - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+    - ./docker/php/ini/zcustom.ini:/usr/local/etc/php/conf.d/zcustom.ini
   working_dir: /www/
 
 mysql:
