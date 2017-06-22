@@ -1,14 +1,52 @@
-Yii 2 Docker Test Enviroment(with php_rdkafka)
+Yii 2 Docker Test Enviroment(with php_rdkafka && redis-server 3.0.*)
 ===============================
 
 1. Clone/Upload
-2. Run #docker-compose up -d and wait until the deploy is complete
-3. Enter in php container #docker exec -it [container-name] bash
-4. Run in container #php composer.phar update
-5. Wait for the token to be entered and enter it
-6. Wait until the composer finishes
-7. Run #php yii migrate/up
-8. Run #php yii migrate --migrationPath=@yii/rbac/migrations
-9. Run #php yii rbac/init
 
-The application is available at 127.0.0.1:80
+       For install advanced Yii2 application edit docker-compose.yml
+           - ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
+           #- ./docker/nginx/conf.dbasic:/etc/nginx/conf.d # - basic
+       
+       For install basic Yii2 application edit docker-compose.yml
+           #- ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
+           - ./docker/nginx/conf.dbasic:/etc/nginx/conf.d # - basic   
+               
+2. Run #docker-compose up -d and wait until the deploy is complete
+       
+       Params for connect to service
+       
+       Mysql:
+           host:        172.18.33.2
+           port:        3306
+           user:        root
+           password:    12345
+       
+       Redis:
+           host:        172.18.33.3
+           port:        6379
+           password:    123456
+           database:    from 1 to 16
+
+3. Enter in php container 
+        
+        docker exec -it [container-name] bash
+
+4. For install advanced Yii2 application run in container 
+    
+        composer create-project --prefer-dist yiisoft/yii2-app-advanced ./
+        
+        php init
+        
+   For install basic Yii2 application run in container 
+   
+       composer create-project --prefer-dist yiisoft/yii2-app-basic ./
+
+5. Wait until the composer finishes
+
+6. Configure Yii2 application and run
+      
+       php yii migrate/up
+
+7. The application is available at 
+
+       http://mysite.local

@@ -1,29 +1,72 @@
-nginx:
-  image: nginx
-  links:
-    - php
-  volumes:
-    - ./project:/www
-    - ./docker/nginx/conf.d:/etc/nginx/conf.d
-  ports:
-    - 80:80
-    - 443:443
+version: '2.1'
 
-php:
-  build: docker/php/build
-  links:
-    - mysql
-  volumes:
-    - ./project:/www
-    - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
-  working_dir: /www/
+services:
+  nginx:
+    image: nginx
+    depends_on:
+      - php
+      - redis
+    volumes:
+      - ./project:/www  #папка с проектом
+      #- ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
+      - ./docker/nginx/conf.dbasic:/etc/nginx/conf.d # - basic
+    ports:
+      - 80:80
+      - 8080:8080
+      - 443:443
+    networks:
+      web:
+        ipv4_address: 172.18.33.4
 
-mysql:
-  volumes:
-    - ./db:/var/lib/mysql
-  image: mysql:5.6
-  environment:
-    MYSQL_ROOT_PASSWORD: 12345
-    MYSQL_DATABASE: test
-  ports:
-    - 3306:3306
+  php:
+    build: docker/php/build
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - ./project:/www    #папка с проектом
+      - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./docker/php/ini/zcustom.ini:/usr/local/etc/php/conf.d/zcustom.ini
+    working_dir: /www/
+    ports:
+      - 9000:9000
+      - 25:25
+      - 110:110
+    networks:
+      web:
+        ipv4_address: 172.18.33.5
+
+  mysql:
+    volumes:
+      - ./db:/var/lib/mysql
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: test
+    command: mysqld --sql_mode=""
+    ports:
+      - 3306:3306
+    networks:
+      web:
+        ipv4_address: 172.18.33.2
+  redis:
+    image: redis:3.0
+    volumes:
+      - ./docker/redis:/usr/local/etc/redis
+    ports:
+      - 6379:6379
+    networks:
+      web:
+        ipv4_address: 172.18.33.3
+    command: 'redis-server /usr/local/etc/redis/redis.conf'
+networks:
+  web:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.18.33.0/24
+        gateway: 172.18.33.1
+      - subnet: 2001:3984:3989::/64
+        gateway: 2001:3984:3989::1

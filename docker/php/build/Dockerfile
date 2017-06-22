@@ -22,13 +22,14 @@ RUN apt-get update && apt-get install -y \
         zlib1g-dev --no-install-recommends && \
         rm -r /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get -y install sendmail
 WORKDIR /tmp
 
-RUN wget https://github.com/edenhill/librdkafka/archive/v0.9.4.tar.gz && \
-    tar -xvf v0.9.4.tar.gz && \
-    cd librdkafka-0.9.4 && \
+RUN wget https://github.com/edenhill/librdkafka/archive/v0.9.5.tar.gz && \
+    tar -xvf v0.9.5.tar.gz && \
+    cd librdkafka-0.9.5 && \
     ./configure && make && make install && ldconfig && cd /tmp && \
-    rm -rf librdkafka-0.9.4 v0.9.4.tar.gz
+    rm -rf librdkafka-0.9.5 v0.9.5.tar.gz
 
 RUN docker-php-ext-configure mbstring && \
     docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
@@ -56,7 +57,6 @@ RUN docker-php-ext-install -j$(nproc) \
     rm -rf /tmp/pear && \
     echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
     echo "extension=rdkafka.so" > /usr/local/etc/php/conf.d/rdkafka.ini && \
-    echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini && \
     echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini && \
     echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini
 
