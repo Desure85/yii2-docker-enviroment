@@ -11,7 +11,7 @@ Yii 2 Docker Enviroment(with php_rdkafka && redis-server 3.0.*)
            #- ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
            - ./docker/nginx/conf.dbasic:/etc/nginx/conf.d # - basic   
                
-2. Run #docker-compose up -d and wait until the deploy is complete
+2. Run #docker-compose up -d --build and wait until the deploy is complete
        
        Params for connect to service
        
