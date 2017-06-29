@@ -1,11 +1,19 @@
-version: '2.1'
-
+version: "3"
 services:
   nginx:
     image: nginx
+    container_name: nginx
+    sysctls:
+      net.core.somaxconn: "65535"
+      net.ipv4.tcp_syncookies: 0
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
     depends_on:
       - php
-      - redis
     volumes:
       - ./project:/www  #папка с проектом
       #- ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
@@ -17,12 +25,21 @@ services:
     networks:
       web:
         ipv4_address: 172.18.33.4
-
   php:
-    build: docker/php/build
-    depends_on:
-      - mysql
-      - redis
+    build:
+      #context: ./docker/php/build/7.0
+      context: ./docker/php/build/7.1
+      #context: ./docker/php/build/5.6
+    container_name: php
+    sysctls:
+      net.core.somaxconn: "65535"
+      net.ipv4.tcp_syncookies: 0
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
     volumes:
       - ./project:/www    #папка с проектом
       - ./docker/php/php-fpm.conf:/usr/local/etc/php-fpm.conf
@@ -35,11 +52,20 @@ services:
     networks:
       web:
         ipv4_address: 172.18.33.5
-
   mysql:
-    volumes:
-      - ./db:/var/lib/mysql
     image: mysql:5.7
+    container_name: mysql
+    sysctls:
+      net.core.somaxconn: "65535"
+      net.ipv4.tcp_syncookies: 0
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
+    volumes:
+      - ./db/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 12345
       MYSQL_DATABASE: test
@@ -51,6 +77,16 @@ services:
         ipv4_address: 172.18.33.2
   redis:
     image: redis:3.0
+    container_name: redis
+    sysctls:
+      net.core.somaxconn: "65535"
+      net.ipv4.tcp_syncookies: 0
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    restart: unless-stopped
     volumes:
       - ./docker/redis:/usr/local/etc/redis
     ports:
@@ -59,14 +95,30 @@ services:
       web:
         ipv4_address: 172.18.33.3
     command: 'redis-server /usr/local/etc/redis/redis.conf'
+#  mongo:
+#    container_name: mongo
+#    sysctls:
+#      net.core.somaxconn: "65535"
+#      net.ipv4.tcp_syncookies: 0
+#    ulimits:
+#      nproc: 65535
+#      nofile:
+#        soft: 20000
+#        hard: 40000
+#    restart: unless-stopped
+#    build:
+#      context: ./docker/mongo/build/3.4
+#    ports:
+#      - 27017:27017
+#    volumes:
+#      - ./db/mongodb:/data/db
+#    networks:
+#      web:
+#        ipv4_address: 172.18.33.6
 networks:
   web:
     driver: bridge
-    enable_ipv6: true
     ipam:
       driver: default
       config:
       - subnet: 172.18.33.0/24
-        gateway: 172.18.33.1
-      - subnet: 2001:3984:3989::/64
-        gateway: 2001:3984:3989::1

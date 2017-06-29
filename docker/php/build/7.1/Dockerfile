@@ -1,4 +1,4 @@
-FROM php:7.0-fpm
+FROM php:7.1-fpm
 # Install modules
 RUN apt-get update && apt-get install -y \
         libicu-dev \
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
         python \
         zlibc \
         zlib1g \
+        git \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libz-dev \
@@ -19,10 +20,10 @@ RUN apt-get update && apt-get install -y \
         libpng12-dev \
         libpq-dev \
         libmagickwand-dev --no-install-recommends \
+        sendmail \
         zlib1g-dev --no-install-recommends && \
         rm -r /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get -y install sendmail
 WORKDIR /tmp
 
 RUN wget https://github.com/edenhill/librdkafka/archive/v0.9.5.tar.gz && \
@@ -32,36 +33,36 @@ RUN wget https://github.com/edenhill/librdkafka/archive/v0.9.5.tar.gz && \
     rm -rf librdkafka-0.9.5 v0.9.5.tar.gz
 
 RUN docker-php-ext-configure mbstring && \
-    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ && \
-    docker-php-ext-configure intl && \
-    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
+    docker-php-ext-configure opcache && \
+    docker-php-ext-configure pdo_mysql && \
+    docker-php-ext-configure pdo_pgsql && \
+    docker-php-ext-configure mcrypt && \
+    docker-php-ext-configure tokenizer && \
+    docker-php-ext-configure mysqli && \
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ \
+    --with-png-dir=/usr/include/ \
+    --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
 
-RUN docker-php-ext-install -j$(nproc) \
-    gd \
-    mcrypt \
-    mbstring \
-    zip \
-    pgsql \
-    tokenizer \
-    mysqli \
-    pdo_mysql \
-    opcache \
-    iconv \
-    mcrypt \
-    intl \
-    pdo_pgsql && \
-    pecl install -o redis && \
-    pecl install apcu && \
-    pecl install imagick && \
-    pecl install channel://pecl.php.net/rdkafka-beta && \
+RUN docker-php-ext-install zip \
+    bcmath \
+    intl
+
+RUN pecl install -o redis \
+    apcu \
+    mongodb \
+    imagick \
+    memcached \
+    msgpack \
+    rdkafka && \
     rm -rf /tmp/pear && \
     echo "extension=redis.so" > /usr/local/etc/php/conf.d/redis.ini && \
     echo "extension=rdkafka.so" > /usr/local/etc/php/conf.d/rdkafka.ini && \
     echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini && \
-    echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini
-
-RUN  pecl install memcached && \
-     echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
+    echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini && \
+    echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini && \
+    echo "extension=msgpack.so" > /usr/local/etc/php/conf.d/msgpack.ini && \
+    echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && composer global require --prefer-dist "fxp/composer-asset-plugin:~1.0"
 
