@@ -13,7 +13,7 @@ Yii 2 Docker Enviroment(with php_rdkafka && redis-server 3.0.*)
            #- ./docker/nginx/conf.d:/etc/nginx/conf.d # - advanced
            - ./docker/nginx/conf.dbasic:/etc/nginx/conf.d # - basic   
        
-      Uncomment PHP version to you need
+      Uncomment the version you need
            
            php:
              build:
