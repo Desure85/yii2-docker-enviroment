@@ -1,8 +1,6 @@
 Yii 2 Docker Enviroment(with php_rdkafka && redis-server 3.0.*)
 ===============================
 
-[![Github All Releases](https://img.shields.io/github/downloads/Desure85/yii2-docker-enviroment/total.svg?style=plastic)]()
-
 1. Clone/Upload
 
       For install advanced Yii2 application edit docker-compose.yml
