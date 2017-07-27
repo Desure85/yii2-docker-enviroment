@@ -1,4 +1,4 @@
-Yii 2 Docker Enviroment(with php_rdkafka && redis-server 3.0.*)
+Yii 2 Docker Enviroment(with php_rdkafka && redis-server)
 ===============================
 
 1. Clone/Upload

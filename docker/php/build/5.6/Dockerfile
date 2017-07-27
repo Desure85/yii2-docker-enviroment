@@ -34,8 +34,6 @@ RUN wget https://github.com/edenhill/librdkafka/archive/v0.9.5.tar.gz && \
 
 RUN docker-php-ext-configure mbstring && \
     docker-php-ext-configure opcache && \
-    docker-php-ext-configure pdo_mysql && \
-    docker-php-ext-configure pdo_pgsql && \
     docker-php-ext-configure mcrypt && \
     docker-php-ext-configure tokenizer && \
     docker-php-ext-configure mysqli && \
@@ -44,7 +42,7 @@ RUN docker-php-ext-configure mbstring && \
     --with-jpeg-dir=/usr/include/ && \
     docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
 
-RUN docker-php-ext-install zip \
+RUN docker-php-ext-install zip pdo_mysql pdo_pgsql\
     bcmath \
     intl
 
